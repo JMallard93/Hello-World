@@ -1,0 +1,39 @@
+import random
+
+
+def generate_boy_name():
+    # Boy Names
+    with open('Random Baby Names+Lists\Boynames.txt', 'r') as file:
+        alltext_boy = file.read()
+        words_boy = list(map(str, alltext_boy.split()))
+
+    print(random.choice(words_boy))
+
+def generate_girl_name():
+    # Girl Names
+    with open('Random Baby Names+Lists\Girlnames.txt', 'r') as file:
+        alltext_girl = file.read()
+        words_girl = list(map(str, alltext_girl.split()))
+
+    print(random.choice(words_girl))
+
+
+
+while True:
+    user_input = input("It's hard to pick a name for a new baby, there are lots to choose from! What kind of name would you like (boy/girl)? ").lower()
+
+    if user_input == "boy":
+        generate_boy_name()
+        break
+    if user_input == "girl":
+        generate_girl_name()
+        break
+    else:
+        print("Please select either boy or girl.")
+
+
+
+
+
+
+

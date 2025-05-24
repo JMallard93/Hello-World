@@ -1,0 +1,15 @@
+import random
+
+while True:
+
+    user_input = input("It's hard to pick a name for a new baby, there are lots to choose from! What kind of name would you like (boy/girl)? ").lower()
+
+    # A much more efficient one liner to pull a random name off a list in a text file.
+    if user_input == 'boy':
+        print(random.choice(open("Random Baby Names+Lists\Boynames.txt").read().split()))
+        break
+    if user_input == 'girl':
+        print(random.choice(open("Random Baby Names+Lists\Girlnames.txt").read().split()))
+        break
+    else:
+        print("Please select either boy or girl.")
