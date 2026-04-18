@@ -1,0 +1,130 @@
+#Budget App
+
+import math
+import itertools
+
+class Category:
+    def __init__(self, name):
+        self.name = name
+        self.ledger = []
+
+    def get_balance(self):
+        total = 0
+        for transaction in self.ledger:
+            total += transaction["amount"]
+        return total
+
+    def check_funds(self, amount):
+        if self.get_balance() < amount:
+            return False
+        else:
+            return True
+   
+    def deposit(self, amount, description = ""):
+        user_deposit = {'amount': amount, 'description': description}
+        self.ledger.append(user_deposit)
+
+    def withdraw(self, amount, description = ""):
+        if self.check_funds(amount):
+            amount = -abs(amount)
+            user_withdraw = {'amount': amount, 'description': description}
+            self.ledger.append(user_withdraw)
+            return True
+        else:
+            return False
+
+    def transfer(self, amount, category):
+        if self.withdraw(amount, f"Transfer to {category.name}"):
+            category.deposit(amount, f"Transfer from {self.name}")
+            return True
+        else:
+            return False
+
+   
+
+    def __str__(self):
+        output = []
+        title = self.name.center(30, "*")
+        output.append(title)
+        for transaction in self.ledger:
+            amount = transaction["amount"]
+            amount_string = f"{amount:.2f}"
+            description = transaction["description"]
+            output.append(description[:23].ljust(23) + amount_string.rjust(7))
+        total = f"Total: {self.get_balance()}"
+        output.append(total)
+        formatted_list = "\n".join(output)
+        return formatted_list
+
+food = Category("Food")
+food.deposit(100, 'initial deposit')
+food.withdraw(10.15, 'groceries')
+food.withdraw(15.89, 'restaurant and more food for dessert')
+print(food)
+
+auto = Category("Auto")
+auto.deposit(1000, 'initial deposit')
+auto.withdraw(200, 'payment')
+auto.withdraw(80, 'oil change')
+print(auto)
+
+insurance = Category("Insurance")
+insurance.deposit(1000, 'initial deposit')
+insurance.withdraw(500, 'payment')
+print(insurance)
+
+
+
+def create_spend_chart(categories):
+    #calculate and store category spending
+    all_spending = []
+    for category in categories:
+        category_total = 0
+        for dictionary in category.ledger:
+            if dictionary["amount"] < 0:
+                category_total += abs(dictionary["amount"])
+        category_spending = {"category": category, "amount": category_total}
+        all_spending.append(category_spending)
+    
+    #getting the grand total
+    grand_total = 0
+    for dictionary in all_spending:
+        grand_total += dictionary["amount"]
+
+    #spend percentages
+    category_percentages = []
+    if grand_total > 0:
+        for dictionary in all_spending:
+            calculated_percentage = (((dictionary["amount"] / grand_total) * 100) // 10) * 10
+            category_percentage = {"category": dictionary["category"], "percentage": calculated_percentage}
+            category_percentages.append(category_percentage)
+
+    #category names for bottom of chart
+    category_names = []
+    for dictionary in category_percentages:
+        category_names.append(dictionary["category"].name)
+
+    #building the chart
+    #y axis and bars
+    chart = ""
+    chart += "Percentage spent by category\n"
+    for i in range(100, -1, -10):
+        chart += str(i).rjust(3) + "| "
+        for dictionary in category_percentages:
+            if dictionary["percentage"] >= i:
+                chart += "o  "
+            else:
+                chart += "   "
+        chart += "\n"
+
+    #horizontal divider
+    horizontal_line = (len(category_names) * 3) +1
+    chart += "    " + ("-" * horizontal_line) + "\n"
+
+    #category names printed vertically
+    for letters in itertools.zip_longest(*category_names, fillvalue = " "):
+        chart += "     " + "  ".join(letters) + "  \n"
+    
+    return chart.rstrip("\n")
+
+print(create_spend_chart([food, auto, insurance]))
