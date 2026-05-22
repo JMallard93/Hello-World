@@ -1,0 +1,46 @@
+def hanoi_solver(number_of_disks):
+    rod_one = []
+    rod_two = []
+    rod_three = []
+    path = []
+   
+    # setting up the game
+    for i in range(1, number_of_disks + 1):
+        rod_one.append(i)
+    rod_one = rod_one[::-1]
+   
+    snapshot = [rod_one.copy(), rod_two.copy(), rod_three.copy()]
+    path.append(snapshot)
+
+    # using recursion to divide and conquer
+    def move(number_of_disks, source, target, aux):
+        # the goal is to reduce the number of disks to one, then move it to the correct rod
+        if number_of_disks == 1:
+            target.append(source.pop())
+            snapshot = [rod_one.copy(), rod_two.copy(), rod_three.copy()]
+            path.append(snapshot)
+            return
+        # the first recursion
+        move(number_of_disks - 1, source, aux, target)
+
+        target.append(source.pop())
+        snapshot = [rod_one.copy(), rod_two.copy(), rod_three.copy()]
+        path.append(snapshot)
+
+        # the second recursion
+        move(number_of_disks - 1, aux, target, source)
+
+    move(number_of_disks, rod_one, rod_three, rod_two)
+
+    #formatting to display all three rods on each line
+    formatted_path = ""
+
+    for i in range(len(path)):
+        r1, r2, r3   = path[i]
+        formatted_path += f"{r1} {r2} {r3}\n"
+   
+    return formatted_path
+
+   
+
+print(hanoi_solver(8))
