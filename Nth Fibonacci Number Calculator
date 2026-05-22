@@ -1,0 +1,13 @@
+def fibonacci(n):
+    sequence = [0, 1]
+
+    if n == 0:
+        return sequence[0]
+    if n == 1:
+        return sequence[1]
+
+    # Dynamically saving each calculation for efficiency. If I used recursion then the number of calculations would increase exponentially with n.
+    for i in range(2, n + 1):
+        sequence.append(sequence[-1] + sequence [-2])
+
+    return sequence[n]
